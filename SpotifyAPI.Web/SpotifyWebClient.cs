@@ -18,9 +18,9 @@ namespace SpotifyAPI.Web
 
     private const string UnknownErrorJson = "{\"error\": { \"status\": 0, \"message\": \"{0}\" }}";
 
-    public SpotifyWebClient(ProxyConfig proxyConfig = null)
+    public SpotifyWebClient()
     {
-      HttpClientHandler clientHandler = ProxyConfig.CreateClientHandler(proxyConfig);
+      HttpClientHandler clientHandler = new HttpClientHandler();
       _client = new HttpClient(clientHandler);
     }
 

@@ -1,3 +1,5 @@
+### This is a fork of SpotifyAPI-NET that will run when compiled to webassembly - it does not have the option of providing a web proxy.
+
 SpotifyAPI-NET 
 ===
 

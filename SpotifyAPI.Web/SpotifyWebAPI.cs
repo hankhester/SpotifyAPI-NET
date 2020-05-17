@@ -16,13 +16,11 @@ namespace SpotifyAPI.Web
   {
     private readonly SpotifyWebBuilder _builder;
 
-    public SpotifyWebAPI() : this(null) { }
-
-    public SpotifyWebAPI(ProxyConfig proxyConfig)
+    public SpotifyWebAPI()
     {
       _builder = new SpotifyWebBuilder();
       UseAuth = true;
-      WebClient = new SpotifyWebClient(proxyConfig)
+      WebClient = new SpotifyWebClient()
       {
         JsonSettings =
         new JsonSerializerSettings
