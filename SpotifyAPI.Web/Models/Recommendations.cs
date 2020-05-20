@@ -1,14 +1,15 @@
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SpotifyAPI.Web.Models
 {
   public class Recommendations : BasicModel
   {
-    [JsonProperty("seeds")]
+    [JsonPropertyName("seeds")]
     public List<RecommendationSeed> Seeds { get; set; }
 
-    [JsonProperty("tracks")]
+    [JsonPropertyName("tracks")]
     public List<SimpleTrack> Tracks { get; set; }
   }
 }

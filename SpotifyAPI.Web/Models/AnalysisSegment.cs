@@ -1,35 +1,36 @@
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SpotifyAPI.Web.Models
 {
   public class AnalysisSegment
   {
-    [JsonProperty("start")]
+    [JsonPropertyName("start")]
     public double Start { get; set; }
 
-    [JsonProperty("duration")]
+    [JsonPropertyName("duration")]
     public double Duration { get; set; }
 
-    [JsonProperty("confidence")]
+    [JsonPropertyName("confidence")]
     public double Confidence { get; set; }
 
-    [JsonProperty("loudness_start")]
+    [JsonPropertyName("loudness_start")]
     public double LoudnessStart { get; set; }
 
-    [JsonProperty("loudness_max_time")]
+    [JsonPropertyName("loudness_max_time")]
     public double LoudnessMaxTime { get; set; }
 
-    [JsonProperty("loudness_max")]
+    [JsonPropertyName("loudness_max")]
     public double LoudnessMax { get; set; }
 
-    [JsonProperty("loudness_end")]
+    [JsonPropertyName("loudness_end")]
     public double LoudnessEnd { get; set; }
 
-    [JsonProperty("pitches")]
+    [JsonPropertyName("pitches")]
     public List<double> Pitches { get; set; }
 
-    [JsonProperty("timbre")]
+    [JsonPropertyName("timbre")]
     public List<double> Timbre { get; set; }
   }
 }

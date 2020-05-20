@@ -1,17 +1,18 @@
 using System;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SpotifyAPI.Web.Models
 {
   public class PlayHistory : BasicModel
   {
-    [JsonProperty("track")]
+    [JsonPropertyName("track")]
     public SimpleTrack Track { get; set; }
 
-    [JsonProperty("played_at")]
+    [JsonPropertyName("played_at")]
     public DateTime PlayedAt { get; set; }
 
-    [JsonProperty("context")]
+    [JsonPropertyName("context")]
     public Context Context { get; set; }
   }
 }

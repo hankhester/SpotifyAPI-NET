@@ -1,43 +1,44 @@
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SpotifyAPI.Web.Models
 {
   public class AnalysisSection
   {
-    [JsonProperty("start")]
+    [JsonPropertyName("start")]
     public double Start { get; set; }
 
-    [JsonProperty("duration")]
+    [JsonPropertyName("duration")]
     public double Duration { get; set; }
 
-    [JsonProperty("confidence")]
+    [JsonPropertyName("confidence")]
     public double Confidence { get; set; }
 
-    [JsonProperty("loudness")]
+    [JsonPropertyName("loudness")]
     public double Loudness { get; set; }
 
-    [JsonProperty("tempo")]
+    [JsonPropertyName("tempo")]
     public double Tempo { get; set; }
 
-    [JsonProperty("tempo_confidence")]
+    [JsonPropertyName("tempo_confidence")]
     public double TempoConfidence { get; set; }
 
-    [JsonProperty("key")]
+    [JsonPropertyName("key")]
     public int Key { get; set; }
 
-    [JsonProperty("key_confidence")]
+    [JsonPropertyName("key_confidence")]
     public double KeyConfidence { get; set; }
 
-    [JsonProperty("mode")]
+    [JsonPropertyName("mode")]
     public int Mode { get; set; }
 
-    [JsonProperty("mode_confidence")]
+    [JsonPropertyName("mode_confidence")]
     public double ModeConfidence { get; set; }
 
-    [JsonProperty("time_signature")]
+    [JsonPropertyName("time_signature")]
     public int TimeSignature { get; set; }
 
-    [JsonProperty("time_signature_confidence")]
+    [JsonPropertyName("time_signature_confidence")]
     public double TimeSignatureConfidence { get; set; }
   }
 }

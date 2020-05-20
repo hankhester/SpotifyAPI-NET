@@ -1,28 +1,29 @@
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SpotifyAPI.Web.Models
 {
   public class AnalysisMeta
   {
-    [JsonProperty("analyzer_version")]
+    [JsonPropertyName("analyzer_version")]
     public string AnalyzerVersion { get; set; }
 
-    [JsonProperty("platform")]
+    [JsonPropertyName("platform")]
     public string Platform { get; set; }
 
-    [JsonProperty("status_code")]
+    [JsonPropertyName("status_code")]
     public int StatusCode { get; set; }
 
-    [JsonProperty("detailed_status")]
+    [JsonPropertyName("detailed_status")]
     public string DetailedStatus { get; set; }
 
-    [JsonProperty("timestamp")]
+    [JsonPropertyName("timestamp")]
     public long Timestamp { get; set; }
 
-    [JsonProperty("analysis_time")]
+    [JsonPropertyName("analysis_time")]
     public double AnalysisTime { get; set; }
 
-    [JsonProperty("input_process")]
+    [JsonPropertyName("input_process")]
     public string InputProcess { get; set; }
   }
 }

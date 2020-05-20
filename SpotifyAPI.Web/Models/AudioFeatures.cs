@@ -1,61 +1,62 @@
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SpotifyAPI.Web.Models
 {
   public class AudioFeatures : BasicModel
   {
-    [JsonProperty("acousticness")]
+    [JsonPropertyName("acousticness")]
     public float Acousticness { get; set; }
 
-    [JsonProperty("analysis_url")]
+    [JsonPropertyName("analysis_url")]
     public string AnalysisUrl { get; set; }
 
-    [JsonProperty("danceability")]
+    [JsonPropertyName("danceability")]
     public float Danceability { get; set; }
 
-    [JsonProperty("duration_ms")]
+    [JsonPropertyName("duration_ms")]
     public int DurationMs { get; set; }
 
-    [JsonProperty("energy")]
+    [JsonPropertyName("energy")]
     public float Energy { get; set; }
 
-    [JsonProperty("id")]
+    [JsonPropertyName("id")]
     public string Id { get; set; }
 
-    [JsonProperty("instrumentalness")]
+    [JsonPropertyName("instrumentalness")]
     public float Instrumentalness { get; set; }
 
-    [JsonProperty("key")]
+    [JsonPropertyName("key")]
     public int Key { get; set; }
 
-    [JsonProperty("liveness")]
+    [JsonPropertyName("liveness")]
     public float Liveness { get; set; }
 
-    [JsonProperty("loudness")]
+    [JsonPropertyName("loudness")]
     public float Loudness { get; set; }
 
-    [JsonProperty("mode")]
+    [JsonPropertyName("mode")]
     public int Mode { get; set; }
 
-    [JsonProperty("speechiness")]
+    [JsonPropertyName("speechiness")]
     public float Speechiness { get; set; }
 
-    [JsonProperty("tempo")]
+    [JsonPropertyName("tempo")]
     public float Tempo { get; set; }
 
-    [JsonProperty("time_signature")]
+    [JsonPropertyName("time_signature")]
     public int TimeSignature { get; set; }
 
-    [JsonProperty("track_href")]
+    [JsonPropertyName("track_href")]
     public string TrackHref { get; set; }
 
-    [JsonProperty("type")]
+    [JsonPropertyName("type")]
     public string Type { get; set; }
 
-    [JsonProperty("uri")]
+    [JsonPropertyName("uri")]
     public string Uri { get; set; }
 
-    [JsonProperty("valence")]
+    [JsonPropertyName("valence")]
     public float Valence { get; set; }
   }
 }

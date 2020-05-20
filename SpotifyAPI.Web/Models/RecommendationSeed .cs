@@ -1,25 +1,26 @@
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SpotifyAPI.Web.Models
 {
   public class RecommendationSeed
   {
-    [JsonProperty("afterFilteringSize")]
+    [JsonPropertyName("afterFilteringSize")]
     public int AfterFilteringSize { get; set; }
 
-    [JsonProperty("afterRelinkingSize")]
+    [JsonPropertyName("afterRelinkingSize")]
     public int AfterRelinkingSize { get; set; }
 
-    [JsonProperty("href")]
+    [JsonPropertyName("href")]
     public string Href { get; set; }
 
-    [JsonProperty("id")]
+    [JsonPropertyName("id")]
     public string Id { get; set; }
 
-    [JsonProperty("initialPoolSize")]
+    [JsonPropertyName("initialPoolSize")]
     public int InitialPoolSize { get; set; }
 
-    [JsonProperty("type")]
+    [JsonPropertyName("type")]
     public string Type { get; set; }
   }
 }

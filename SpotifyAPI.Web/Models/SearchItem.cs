@@ -1,19 +1,20 @@
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SpotifyAPI.Web.Models
 {
   public class SearchItem : BasicModel
   {
-    [JsonProperty("artists")]
+    [JsonPropertyName("artists")]
     public Paging<FullArtist> Artists { get; set; }
 
-    [JsonProperty("albums")]
+    [JsonPropertyName("albums")]
     public Paging<SimpleAlbum> Albums { get; set; }
 
-    [JsonProperty("tracks")]
+    [JsonPropertyName("tracks")]
     public Paging<FullTrack> Tracks { get; set; }
 
-    [JsonProperty("playlists")]
+    [JsonPropertyName("playlists")]
     public Paging<SimplePlaylist> Playlists { get; set; }
   }
 }

@@ -1,5 +1,6 @@
 using System;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SpotifyAPI.Web.Models
 {
@@ -10,22 +11,22 @@ namespace SpotifyAPI.Web.Models
       CreateDate = DateTime.Now;
     }
 
-    [JsonProperty("access_token")]
+    [JsonPropertyName("access_token")]
     public string AccessToken { get; set; }
 
-    [JsonProperty("token_type")]
+    [JsonPropertyName("token_type")]
     public string TokenType { get; set; }
 
-    [JsonProperty("expires_in")]
+    [JsonPropertyName("expires_in")]
     public double ExpiresIn { get; set; }
 
-    [JsonProperty("refresh_token")]
+    [JsonPropertyName("refresh_token")]
     public string RefreshToken { get; set; }
 
-    [JsonProperty("error")]
+    [JsonPropertyName("error")]
     public string Error { get; set; }
 
-    [JsonProperty("error_description")]
+    [JsonPropertyName("error_description")]
     public string ErrorDescription { get; set; }
 
     public DateTime CreateDate { get; set; }

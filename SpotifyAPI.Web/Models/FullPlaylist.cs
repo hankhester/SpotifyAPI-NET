@@ -1,50 +1,51 @@
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SpotifyAPI.Web.Models
 {
   public class FullPlaylist : BasicModel
   {
-    [JsonProperty("collaborative")]
+    [JsonPropertyName("collaborative")]
     public bool Collaborative { get; set; }
 
-    [JsonProperty("description")]
+    [JsonPropertyName("description")]
     public string Description { get; set; }
 
-    [JsonProperty("external_urls")]
+    [JsonPropertyName("external_urls")]
     public Dictionary<string, string> ExternalUrls { get; set; }
 
-    [JsonProperty("followers")]
+    [JsonPropertyName("followers")]
     public Followers Followers { get; set; }
 
-    [JsonProperty("href")]
+    [JsonPropertyName("href")]
     public string Href { get; set; }
 
-    [JsonProperty("id")]
+    [JsonPropertyName("id")]
     public string Id { get; set; }
 
-    [JsonProperty("images")]
+    [JsonPropertyName("images")]
     public List<Image> Images { get; set; }
 
-    [JsonProperty("name")]
+    [JsonPropertyName("name")]
     public string Name { get; set; }
 
-    [JsonProperty("owner")]
+    [JsonPropertyName("owner")]
     public PublicProfile Owner { get; set; }
 
-    [JsonProperty("public")]
+    [JsonPropertyName("public")]
     public bool Public { get; set; }
 
-    [JsonProperty("snapshot_id")]
+    [JsonPropertyName("snapshot_id")]
     public string SnapshotId { get; set; }
 
-    [JsonProperty("tracks")]
+    [JsonPropertyName("tracks")]
     public Paging<PlaylistTrack> Tracks { get; set; }
 
-    [JsonProperty("type")]
+    [JsonPropertyName("type")]
     public string Type { get; set; }
 
-    [JsonProperty("uri")]
+    [JsonPropertyName("uri")]
     public string Uri { get; set; }
   }
 }

@@ -1,13 +1,14 @@
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SpotifyAPI.Web.Models
 {
   public class FeaturedPlaylists : BasicModel
   {
-    [JsonProperty("message")]
+    [JsonPropertyName("message")]
     public string Message { get; set; }
 
-    [JsonProperty("playlists")]
+    [JsonPropertyName("playlists")]
     public Paging<SimplePlaylist> Playlists { get; set; }
   }
 }

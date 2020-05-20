@@ -1,11 +1,12 @@
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SpotifyAPI.Web.Models
 {
   public class SeveralAlbums : BasicModel
   {
-    [JsonProperty("albums")]
+    [JsonPropertyName("albums")]
     public List<FullAlbum> Albums { get; set; }
   }
 }

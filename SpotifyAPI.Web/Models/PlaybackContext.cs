@@ -1,38 +1,38 @@
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using SpotifyAPI.Web.Enums;
 
 namespace SpotifyAPI.Web.Models
 {
   public class PlaybackContext : BasicModel
   {
-    [JsonProperty("device")]
+    [JsonPropertyName("device")]
     public Device Device { get; set; }
 
-    [JsonProperty("repeat_state")]
-    [JsonConverter(typeof(StringEnumConverter))]
+    [JsonPropertyName("repeat_state")]
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public RepeatState RepeatState { get; set; }
 
-    [JsonProperty("shuffle_state")]
+    [JsonPropertyName("shuffle_state")]
     public bool ShuffleState { get; set; }
 
-    [JsonProperty("context")]
+    [JsonPropertyName("context")]
     public Context Context { get; set; }
 
-    [JsonProperty("timestamp")]
+    [JsonPropertyName("timestamp")]
     public long Timestamp { get; set; }
 
-    [JsonProperty("progress_ms")]
+    [JsonPropertyName("progress_ms")]
     public int ProgressMs { get; set; }
 
-    [JsonProperty("is_playing")]
+    [JsonPropertyName("is_playing")]
     public bool IsPlaying { get; set; }
 
-    [JsonProperty("item")]
+    [JsonPropertyName("item")]
     public FullTrack Item { get; set; }
 
-    [JsonProperty("currently_playing_type")]
-    [JsonConverter(typeof(StringEnumConverter))]
+    [JsonPropertyName("currently_playing_type")]
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public TrackType CurrentlyPlayingType { get; set; }
   }
 }

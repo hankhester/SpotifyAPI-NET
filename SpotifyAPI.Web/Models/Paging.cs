@@ -1,29 +1,30 @@
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SpotifyAPI.Web.Models
 {
   public class Paging<T> : BasicModel
   {
-    [JsonProperty("href")]
+    [JsonPropertyName("href")]
     public string Href { get; set; }
 
-    [JsonProperty("items")]
+    [JsonPropertyName("items")]
     public List<T> Items { get; set; }
 
-    [JsonProperty("limit")]
+    [JsonPropertyName("limit")]
     public int Limit { get; set; }
 
-    [JsonProperty("next")]
+    [JsonPropertyName("next")]
     public string Next { get; set; }
 
-    [JsonProperty("offset")]
+    [JsonPropertyName("offset")]
     public int Offset { get; set; }
 
-    [JsonProperty("previous")]
+    [JsonPropertyName("previous")]
     public string Previous { get; set; }
 
-    [JsonProperty("total")]
+    [JsonPropertyName("total")]
     public int Total { get; set; }
 
     public bool HasNextPage()

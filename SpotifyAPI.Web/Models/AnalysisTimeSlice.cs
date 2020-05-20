@@ -1,16 +1,17 @@
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SpotifyAPI.Web.Models
 {
   public class AnalysisTimeSlice
   {
-    [JsonProperty("start")]
+    [JsonPropertyName("start")]
     public double Start { get; set; }
 
-    [JsonProperty("duration")]
+    [JsonPropertyName("duration")]
     public double Duration { get; set; }
 
-    [JsonProperty("confidence")]
+    [JsonPropertyName("confidence")]
     public double Confidence { get; set; }
   }
 }

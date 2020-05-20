@@ -1,19 +1,20 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SpotifyAPI.Web.Models
 {
   public class Image
   {
-    [JsonProperty("url")]
+    [JsonPropertyName("url")]
     public string Url { get; set; }
 
-    [JsonProperty("width")]
+    [JsonPropertyName("width")]
     public int Width { get; set; }
 
-    [JsonProperty("height")]
+    [JsonPropertyName("height")]
     public int Height { get; set; }
   }
 
@@ -22,43 +23,43 @@ namespace SpotifyAPI.Web.Models
 
   public class Error
   {
-    [JsonProperty("status")]
+    [JsonPropertyName("status")]
     public int Status { get; set; }
 
-    [JsonProperty("message")]
+    [JsonPropertyName("message")]
     public string Message { get; set; }
   }
 
   public class PlaylistTrackCollection
   {
-    [JsonProperty("href")]
+    [JsonPropertyName("href")]
     public string Href { get; set; }
 
-    [JsonProperty("total")]
+    [JsonPropertyName("total")]
     public int Total { get; set; }
   }
 
   public class Followers
   {
-    [JsonProperty("href")]
+    [JsonPropertyName("href")]
     public string Href { get; set; }
 
-    [JsonProperty("total")]
+    [JsonPropertyName("total")]
     public int Total { get; set; }
   }
 
   public class PlaylistTrack
   {
-    [JsonProperty("added_at")]
+    [JsonPropertyName("added_at")]
     public DateTime AddedAt { get; set; }
 
-    [JsonProperty("added_by")]
+    [JsonPropertyName("added_by")]
     public PublicProfile AddedBy { get; set; }
 
-    [JsonProperty("track")]
+    [JsonPropertyName("track")]
     public FullTrack Track { get; set; }
 
-    [JsonProperty("is_local")]
+    [JsonPropertyName("is_local")]
     public bool IsLocal { get; set; }
   }
 
@@ -75,10 +76,10 @@ namespace SpotifyAPI.Web.Models
       Uri = uri;
     }
 
-    [JsonProperty("uri")]
+    [JsonPropertyName("uri")]
     public string Uri { get; set; }
 
-    [JsonProperty("positions")]
+    [JsonPropertyName("positions")]
     public List<int> Positions { get; set; }
 
     public bool ShouldSerializePositions()
@@ -89,70 +90,70 @@ namespace SpotifyAPI.Web.Models
 
   public class Copyright
   {
-    [JsonProperty("text")]
+    [JsonPropertyName("text")]
     public string Text { get; set; }
 
-    [JsonProperty("type")]
+    [JsonPropertyName("type")]
     public string Type { get; set; }
   }
 
   public class LinkedFrom
   {
-    [JsonProperty("external_urls")]
+    [JsonPropertyName("external_urls")]
     public Dictionary<string, string> ExternalUrls { get; set; }
 
-    [JsonProperty("href")]
+    [JsonPropertyName("href")]
     public string Href { get; set; }
 
-    [JsonProperty("id")]
+    [JsonPropertyName("id")]
     public string Id { get; set; }
 
-    [JsonProperty("type")]
+    [JsonPropertyName("type")]
     public string Type { get; set; }
 
-    [JsonProperty("uri")]
+    [JsonPropertyName("uri")]
     public string Uri { get; set; }
   }
 
   public class SavedTrack
   {
-    [JsonProperty("added_at")]
+    [JsonPropertyName("added_at")]
     public DateTime AddedAt { get; set; }
 
-    [JsonProperty("track")]
+    [JsonPropertyName("track")]
     public FullTrack Track { get; set; }
   }
 
   public class SavedAlbum
   {
-    [JsonProperty("added_at")]
+    [JsonPropertyName("added_at")]
     public DateTime AddedAt { get; set; }
 
-    [JsonProperty("album")]
+    [JsonPropertyName("album")]
     public FullAlbum Album { get; set; }
   }
 
   public class Cursor
   {
-    [JsonProperty("after")]
+    [JsonPropertyName("after")]
     public string After { get; set; }
 
-    [JsonProperty("before")]
+    [JsonPropertyName("before")]
     public string Before { get; set; }
   }
 
   public class Context
   {
-    [JsonProperty("type")]
+    [JsonPropertyName("type")]
     public string Type { get; set; }
 
-    [JsonProperty("href")]
+    [JsonPropertyName("href")]
     public string Href { get; set; }
 
-    [JsonProperty("external_urls")]
+    [JsonPropertyName("external_urls")]
     public Dictionary<string, string> ExternalUrls { get; set; }
 
-    [JsonProperty("uri")]
+    [JsonPropertyName("uri")]
     public string Uri { get; set; }
   }
 }

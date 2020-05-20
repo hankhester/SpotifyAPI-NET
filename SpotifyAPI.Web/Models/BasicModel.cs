@@ -1,11 +1,12 @@
 using System.Net;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SpotifyAPI.Web.Models
 {
   public abstract class BasicModel
   {
-    [JsonProperty("error")]
+    [JsonPropertyName("error")]
     public Error Error { get; set; }
 
     private ResponseInfo _info;

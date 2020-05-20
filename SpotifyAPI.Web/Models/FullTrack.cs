@@ -1,71 +1,72 @@
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SpotifyAPI.Web.Models
 {
   public class FullTrack : BasicModel
   {
-    [JsonProperty("album")]
+    [JsonPropertyName("album")]
     public SimpleAlbum Album { get; set; }
 
-    [JsonProperty("artists")]
+    [JsonPropertyName("artists")]
     public List<SimpleArtist> Artists { get; set; }
 
-    [JsonProperty("available_markets")]
+    [JsonPropertyName("available_markets")]
     public List<string> AvailableMarkets { get; set; }
 
-    [JsonProperty("disc_number")]
+    [JsonPropertyName("disc_number")]
     public int DiscNumber { get; set; }
 
-    [JsonProperty("duration_ms")]
+    [JsonPropertyName("duration_ms")]
     public int DurationMs { get; set; }
 
-    [JsonProperty("explicit")]
+    [JsonPropertyName("explicit")]
     public bool Explicit { get; set; }
 
-    [JsonProperty("external_ids")]
+    [JsonPropertyName("external_ids")]
     public Dictionary<string, string> ExternalIds { get; set; }
 
-    [JsonProperty("external_urls")]
+    [JsonPropertyName("external_urls")]
     public Dictionary<string, string> ExternUrls { get; set; }
 
-    [JsonProperty("href")]
+    [JsonPropertyName("href")]
     public string Href { get; set; }
 
-    [JsonProperty("id")]
+    [JsonPropertyName("id")]
     public string Id { get; set; }
 
-    [JsonProperty("name")]
+    [JsonPropertyName("name")]
     public string Name { get; set; }
 
-    [JsonProperty("popularity")]
+    [JsonPropertyName("popularity")]
     public int Popularity { get; set; }
 
-    [JsonProperty("preview_url")]
+    [JsonPropertyName("preview_url")]
     public string PreviewUrl { get; set; }
 
-    [JsonProperty("track_number")]
+    [JsonPropertyName("track_number")]
     public int TrackNumber { get; set; }
 
-    [JsonProperty("restrictions")]
+    [JsonPropertyName("restrictions")]
     public Dictionary<string, string> Restrictions { get; set; }
 
-    [JsonProperty("type")]
+    [JsonPropertyName("type")]
     public string Type { get; set; }
 
-    [JsonProperty("uri")]
+    [JsonPropertyName("uri")]
     public string Uri { get; set; }
 
     /// <summary>
     ///     Only filled when the "market"-parameter was supplied!
     /// </summary>
-    [JsonProperty("is_playable")]
+    [JsonPropertyName("is_playable")]
     public bool? IsPlayable { get; set; }
 
     /// <summary>
     ///     Only filled when the "market"-parameter was supplied!
     /// </summary>
-    [JsonProperty("linked_from")]
+    [JsonPropertyName("linked_from")]
     public LinkedFrom LinkedFrom { get; set; }
   }
 }

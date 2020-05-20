@@ -1,68 +1,69 @@
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SpotifyAPI.Web.Models
 {
   public class FullAlbum : BasicModel
   {
-    [JsonProperty("album_type")]
+    [JsonPropertyName("album_type")]
     public string AlbumType { get; set; }
 
-    [JsonProperty("artists")]
+    [JsonPropertyName("artists")]
     public List<SimpleArtist> Artists { get; set; }
 
-    [JsonProperty("available_markets")]
+    [JsonPropertyName("available_markets")]
     public List<string> AvailableMarkets { get; set; }
 
-    [JsonProperty("copyrights")]
+    [JsonPropertyName("copyrights")]
     public List<Copyright> Copyrights { get; set; }
 
-    [JsonProperty("external_ids")]
+    [JsonPropertyName("external_ids")]
     public Dictionary<string, string> ExternalIds { get; set; }
 
-    [JsonProperty("external_urls")]
+    [JsonPropertyName("external_urls")]
     public Dictionary<string, string> ExternalUrls { get; set; }
 
-    [JsonProperty("genres")]
+    [JsonPropertyName("genres")]
     public List<string> Genres { get; set; }
 
-    [JsonProperty("href")]
+    [JsonPropertyName("href")]
     public string Href { get; set; }
 
-    [JsonProperty("id")]
+    [JsonPropertyName("id")]
     public string Id { get; set; }
 
-    [JsonProperty("images")]
+    [JsonPropertyName("images")]
     public List<Image> Images { get; set; }
 
-    [JsonProperty("label")]
+    [JsonPropertyName("label")]
     public string Label { get; set; }
 
-    [JsonProperty("name")]
+    [JsonPropertyName("name")]
     public string Name { get; set; }
 
-    [JsonProperty("popularity")]
+    [JsonPropertyName("popularity")]
     public int Popularity { get; set; }
 
-    [JsonProperty("release_date")]
+    [JsonPropertyName("release_date")]
     public string ReleaseDate { get; set; }
 
-    [JsonProperty("release_date_precision")]
+    [JsonPropertyName("release_date_precision")]
     public string ReleaseDatePrecision { get; set; }
 
-    [JsonProperty("tracks")]
+    [JsonPropertyName("tracks")]
     public Paging<SimpleTrack> Tracks { get; set; }
 
-    [JsonProperty("restrictions")]
+    [JsonPropertyName("restrictions")]
     public Dictionary<string, string> Restrictions { get; set; }
 
-    [JsonProperty("total_tracks")]
+    [JsonPropertyName("total_tracks")]
     public int TotalTracks { get; set; }
 
-    [JsonProperty("type")]
+    [JsonPropertyName("type")]
     public string Type { get; set; }
 
-    [JsonProperty("uri")]
+    [JsonPropertyName("uri")]
     public string Uri { get; set; }
   }
 }

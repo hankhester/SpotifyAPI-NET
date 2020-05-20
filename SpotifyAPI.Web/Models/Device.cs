@@ -1,25 +1,26 @@
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SpotifyAPI.Web.Models
 {
   public class Device
   {
-    [JsonProperty("id")]
+    [JsonPropertyName("id")]
     public string Id { get; set; }
 
-    [JsonProperty("is_active")]
+    [JsonPropertyName("is_active")]
     public bool IsActive { get; set; }
 
-    [JsonProperty("is_restricted")]
+    [JsonPropertyName("is_restricted")]
     public bool IsRestricted { get; set; }
 
-    [JsonProperty("name")]
+    [JsonPropertyName("name")]
     public string Name { get; set; }
 
-    [JsonProperty("type")]
+    [JsonPropertyName("type")]
     public string Type { get; set; }
 
-    [JsonProperty("volume_percent")]
+    [JsonPropertyName("volume_percent")]
     public int VolumePercent { get; set; }
   }
 }

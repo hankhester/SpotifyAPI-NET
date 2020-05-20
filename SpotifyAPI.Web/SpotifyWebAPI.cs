@@ -4,8 +4,8 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using SpotifyAPI.Web.Enums;
 using SpotifyAPI.Web.Models;
 
@@ -15,6 +15,10 @@ namespace SpotifyAPI.Web
   public sealed class SpotifyWebAPI : IDisposable
   {
     private readonly SpotifyWebBuilder _builder;
+    private readonly JsonSerializerOptions _ignoreNullOptions = new JsonSerializerOptions()
+    {
+        IgnoreNullValues = true
+    };
 
     public SpotifyWebAPI()
     {
@@ -23,9 +27,9 @@ namespace SpotifyAPI.Web
       WebClient = new SpotifyWebClient()
       {
         JsonSettings =
-        new JsonSerializerSettings
+        new JsonSerializerOptions()
         {
-          NullValueHandling = NullValueHandling.Ignore
+          IgnoreNullValues = true
         }
       };
     }
@@ -652,10 +656,8 @@ namespace SpotifyAPI.Web
     /// <remarks>AUTH NEEDED</remarks>
     public ErrorResponse Follow(FollowType followType, List<string> ids)
     {
-      JObject ob = new JObject
-      { { "ids", new JArray(ids) }
-      };
-      return UploadData<ErrorResponse>(_builder.Follow(followType), ob.ToString(Formatting.None), "PUT") ?? new ErrorResponse();
+      string data = JsonSerializer.Serialize(new { ids = ids });
+      return UploadData<ErrorResponse>(_builder.Follow(followType), data, "PUT") ?? new ErrorResponse();
     }
 
     /// <summary>
@@ -667,11 +669,8 @@ namespace SpotifyAPI.Web
     /// <remarks>AUTH NEEDED</remarks>
     public async Task<ErrorResponse> FollowAsync(FollowType followType, List<string> ids)
     {
-      JObject ob = new JObject
-      { { "ids", new JArray(ids) }
-      };
-      return await UploadDataAsync<ErrorResponse>(_builder.Follow(followType),
-        ob.ToString(Formatting.None), "PUT").ConfigureAwait(false) ?? new ErrorResponse();
+      string data = JsonSerializer.Serialize(new { ids = ids });
+      return await UploadDataAsync<ErrorResponse>(_builder.Follow(followType), data, "PUT").ConfigureAwait(false) ?? new ErrorResponse();
     }
 
     /// <summary>
@@ -707,10 +706,8 @@ namespace SpotifyAPI.Web
     /// <remarks>AUTH NEEDED</remarks>
     public ErrorResponse Unfollow(FollowType followType, List<string> ids)
     {
-      JObject ob = new JObject
-      { { "ids", new JArray(ids) }
-      };
-      return UploadData<ErrorResponse>(_builder.Unfollow(followType), ob.ToString(Formatting.None), "DELETE") ?? new ErrorResponse();
+      string data = JsonSerializer.Serialize(new { ids = ids });
+      return UploadData<ErrorResponse>(_builder.Unfollow(followType), data, "DELETE") ?? new ErrorResponse();
     }
 
     /// <summary>
@@ -722,10 +719,8 @@ namespace SpotifyAPI.Web
     /// <remarks>AUTH NEEDED</remarks>
     public async Task<ErrorResponse> UnfollowAsync(FollowType followType, List<string> ids)
     {
-      JObject ob = new JObject
-      { { "ids", new JArray(ids) }
-      };
-      return await UploadDataAsync<ErrorResponse>(_builder.Unfollow(followType), ob.ToString(Formatting.None), "DELETE").ConfigureAwait(false) ?? new ErrorResponse();
+      string data = JsonSerializer.Serialize(new { ids = ids });
+      return await UploadDataAsync<ErrorResponse>(_builder.Unfollow(followType), data, "DELETE").ConfigureAwait(false) ?? new ErrorResponse();
     }
 
     /// <summary>
@@ -811,6 +806,7 @@ namespace SpotifyAPI.Web
     /// <summary>
     ///     Add the current user as a follower of a playlist.
     /// </summary>
+    /// <param name="ownerId">The Spotify user ID of the person who owns the playlist.</param>
     /// <param name="playlistId">
     ///     The Spotify ID of the playlist. Any playlist can be followed, regardless of its public/private
     ///     status, as long as you know its playlist ID.
@@ -823,10 +819,8 @@ namespace SpotifyAPI.Web
     /// <remarks>AUTH NEEDED</remarks>
     public ErrorResponse FollowPlaylist(string ownerId, string playlistId, bool showPublic = true)
     {
-      JObject body = new JObject
-      { { "public", showPublic }
-      };
-      return UploadData<ErrorResponse>(_builder.FollowPlaylist(playlistId), body.ToString(Formatting.None), "PUT");
+      string data = JsonSerializer.Serialize(new { PublicProfile = showPublic });
+      return UploadData<ErrorResponse>(_builder.FollowPlaylist(playlistId), data, "PUT");
     }
 
     /// <summary>
@@ -844,10 +838,8 @@ namespace SpotifyAPI.Web
     /// <remarks>AUTH NEEDED</remarks>
     public Task<ErrorResponse> FollowPlaylistAsync(string playlistId, bool showPublic = true)
     {
-      JObject body = new JObject
-      { { "public", showPublic }
-      };
-      return UploadDataAsync<ErrorResponse>(_builder.FollowPlaylist(playlistId), body.ToString(Formatting.None), "PUT");
+      string data = JsonSerializer.Serialize(new { @public = showPublic });
+      return UploadDataAsync<ErrorResponse>(_builder.FollowPlaylist(playlistId), data, "PUT");
     }
 
     /// <summary>
@@ -864,7 +856,6 @@ namespace SpotifyAPI.Web
     /// <summary>
     ///     Remove the current user as a follower of a playlist asynchronously.
     /// </summary>
-    /// <param name="ownerId">The Spotify user ID of the person who owns the playlist.</param>
     /// <param name="playlistId">The Spotify ID of the playlist that is to be no longer followed.</param>
     /// <returns></returns>
     /// <remarks>AUTH NEEDED</remarks>
@@ -941,8 +932,8 @@ namespace SpotifyAPI.Web
     /// <remarks>AUTH NEEDED</remarks>
     public ErrorResponse SaveTracks(List<string> ids)
     {
-      JArray array = new JArray(ids);
-      return UploadData<ErrorResponse>(_builder.SaveTracks(), array.ToString(Formatting.None), "PUT") ?? new ErrorResponse();
+      string data = JsonSerializer.Serialize(ids);
+      return UploadData<ErrorResponse>(_builder.SaveTracks(), data, "PUT") ?? new ErrorResponse();
     }
 
     /// <summary>
@@ -953,8 +944,8 @@ namespace SpotifyAPI.Web
     /// <remarks>AUTH NEEDED</remarks>
     public async Task<ErrorResponse> SaveTracksAsync(List<string> ids)
     {
-      JArray array = new JArray(ids);
-      return await UploadDataAsync<ErrorResponse>(_builder.SaveTracks(), array.ToString(Formatting.None), "PUT").ConfigureAwait(false) ?? new ErrorResponse();
+      string data = JsonSerializer.Serialize(ids);
+      return await UploadDataAsync<ErrorResponse>(_builder.SaveTracks(), data, "PUT").ConfigureAwait(false) ?? new ErrorResponse();
     }
 
     /// <summary>
@@ -1017,8 +1008,8 @@ namespace SpotifyAPI.Web
     /// <remarks>AUTH NEEDED</remarks>
     public ErrorResponse RemoveSavedTracks(List<string> ids)
     {
-      JArray array = new JArray(ids);
-      return UploadData<ErrorResponse>(_builder.RemoveSavedTracks(), array.ToString(Formatting.None), "DELETE") ?? new ErrorResponse();
+      string data = JsonSerializer.Serialize(ids);
+      return UploadData<ErrorResponse>(_builder.RemoveSavedTracks(), data, "DELETE") ?? new ErrorResponse();
     }
 
     /// <summary>
@@ -1029,8 +1020,8 @@ namespace SpotifyAPI.Web
     /// <remarks>AUTH NEEDED</remarks>
     public async Task<ErrorResponse> RemoveSavedTracksAsync(List<string> ids)
     {
-      JArray array = new JArray(ids);
-      return await UploadDataAsync<ErrorResponse>(_builder.RemoveSavedTracks(), array.ToString(Formatting.None), "DELETE").ConfigureAwait(false) ?? new ErrorResponse();
+      string data = JsonSerializer.Serialize(ids);
+      return await UploadDataAsync<ErrorResponse>(_builder.RemoveSavedTracks(), data, "DELETE").ConfigureAwait(false) ?? new ErrorResponse();
     }
 
     /// <summary>
@@ -1070,8 +1061,8 @@ namespace SpotifyAPI.Web
     /// <remarks>AUTH NEEDED</remarks>
     public ErrorResponse SaveAlbums(List<string> ids)
     {
-      JArray array = new JArray(ids);
-      return UploadData<ErrorResponse>(_builder.SaveAlbums(), array.ToString(Formatting.None), "PUT") ?? new ErrorResponse();
+      string data = JsonSerializer.Serialize(ids);
+      return UploadData<ErrorResponse>(_builder.SaveAlbums(), data, "PUT") ?? new ErrorResponse();
     }
 
     /// <summary>
@@ -1082,8 +1073,8 @@ namespace SpotifyAPI.Web
     /// <remarks>AUTH NEEDED</remarks>
     public async Task<ErrorResponse> SaveAlbumsAsync(List<string> ids)
     {
-      JArray array = new JArray(ids);
-      return await UploadDataAsync<ErrorResponse>(_builder.SaveAlbums(), array.ToString(Formatting.None), "PUT").ConfigureAwait(false) ?? new ErrorResponse();
+      string data = JsonSerializer.Serialize(ids);
+      return await UploadDataAsync<ErrorResponse>(_builder.SaveAlbums(), data, "PUT").ConfigureAwait(false) ?? new ErrorResponse();
     }
 
     /// <summary>
@@ -1146,8 +1137,8 @@ namespace SpotifyAPI.Web
     /// <remarks>AUTH NEEDED</remarks>
     public ErrorResponse RemoveSavedAlbums(List<string> ids)
     {
-      JArray array = new JArray(ids);
-      return UploadData<ErrorResponse>(_builder.RemoveSavedAlbums(), array.ToString(Formatting.None), "DELETE") ?? new ErrorResponse();
+      string data = JsonSerializer.Serialize(ids);
+      return UploadData<ErrorResponse>(_builder.RemoveSavedAlbums(), data, "DELETE") ?? new ErrorResponse();
     }
 
     /// <summary>
@@ -1158,8 +1149,8 @@ namespace SpotifyAPI.Web
     /// <remarks>AUTH NEEDED</remarks>
     public async Task<ErrorResponse> RemoveSavedAlbumsAsync(List<string> ids)
     {
-      JArray array = new JArray(ids);
-      return await UploadDataAsync<ErrorResponse>(_builder.RemoveSavedAlbums(), array.ToString(Formatting.None), "DELETE").ConfigureAwait(false) ?? new ErrorResponse();
+      string data = JsonSerializer.Serialize(ids);
+      return await UploadDataAsync<ErrorResponse>(_builder.RemoveSavedAlbums(), data, "DELETE").ConfigureAwait(false) ?? new ErrorResponse();
     }
 
     /// <summary>
@@ -1496,10 +1487,8 @@ namespace SpotifyAPI.Web
     /// <remarks>AUTH NEEDED</remarks>
     public FullPlaylist CreatePlaylist(string userId, string playlistName, bool isPublic = true, bool isCollaborative = false, string playlistDescription = "")
     {
-      JObject body = new JObject
-      { { "name", playlistName }, { "public", isPublic }, { "collaborative", isCollaborative }, { "description", playlistDescription }
-      };
-      return UploadData<FullPlaylist>(_builder.CreatePlaylist(userId, playlistName, isPublic), body.ToString(Formatting.None));
+      string body = JsonSerializer.Serialize(new { name = playlistName, @public = isPublic, collaborative = isCollaborative, description = playlistDescription });
+      return UploadData<FullPlaylist>(_builder.CreatePlaylist(userId, playlistName, isPublic), body);
     }
 
     /// <summary>
@@ -1521,10 +1510,8 @@ namespace SpotifyAPI.Web
     /// <remarks>AUTH NEEDED</remarks>
     public Task<FullPlaylist> CreatePlaylistAsync(string userId, string playlistName, bool isPublic = true, bool isCollaborative = false, string playlistDescription = "")
     {
-      JObject body = new JObject
-      { { "name", playlistName }, { "public", isPublic }, { "collaborative", isCollaborative }, { "description", playlistDescription }
-      };
-      return UploadDataAsync<FullPlaylist>(_builder.CreatePlaylist(userId, playlistName, isPublic), body.ToString(Formatting.None));
+      string body = JsonSerializer.Serialize(new { name = playlistName, @public = isPublic, collaborative = isCollaborative, description = playlistDescription });
+      return UploadDataAsync<FullPlaylist>(_builder.CreatePlaylist(userId, playlistName, isPublic), body);
     }
 
     /// <summary>
@@ -1542,16 +1529,8 @@ namespace SpotifyAPI.Web
     [Obsolete("Calling UpdatePlaylist with a userId is deprecated, remove the parameter")]
     public ErrorResponse UpdatePlaylist(string userId, string playlistId, string newName = null, bool? newPublic = null, bool? newCollaborative = null, string newDescription = null)
     {
-      JObject body = new JObject();
-      if (newName != null)
-        body.Add("name", newName);
-      if (newPublic != null)
-        body.Add("public", newPublic);
-      if (newCollaborative != null)
-        body.Add("collaborative", newCollaborative);
-      if (newDescription != null)
-        body.Add("description", newDescription);
-      return UploadData<ErrorResponse>(_builder.UpdatePlaylist(userId, playlistId), body.ToString(Formatting.None), "PUT") ?? new ErrorResponse();
+      string body = JsonSerializer.Serialize(new { name = newName, @public = newPublic, collaborative = newCollaborative, description = newDescription }, _ignoreNullOptions);
+      return UploadData<ErrorResponse>(_builder.UpdatePlaylist(userId, playlistId), body, "PUT") ?? new ErrorResponse();
     }
 
     /// <summary>
@@ -1567,16 +1546,8 @@ namespace SpotifyAPI.Web
     /// <remarks>AUTH NEEDED</remarks>
     public ErrorResponse UpdatePlaylist(string playlistId, string newName = null, bool? newPublic = null, bool? newCollaborative = null, string newDescription = null)
     {
-      JObject body = new JObject();
-      if (newName != null)
-        body.Add("name", newName);
-      if (newPublic != null)
-        body.Add("public", newPublic);
-      if (newCollaborative != null)
-        body.Add("collaborative", newCollaborative);
-      if (newDescription != null)
-        body.Add("description", newDescription);
-      return UploadData<ErrorResponse>(_builder.UpdatePlaylist(playlistId), body.ToString(Formatting.None), "PUT") ?? new ErrorResponse();
+      string body = JsonSerializer.Serialize(new { name = newName, @public = newPublic, collaborative = newCollaborative, description = newDescription }, _ignoreNullOptions);
+      return UploadData<ErrorResponse>(_builder.UpdatePlaylist(playlistId), body, "PUT") ?? new ErrorResponse();
     }
 
     /// <summary>
@@ -1593,16 +1564,8 @@ namespace SpotifyAPI.Web
     [Obsolete("Calling UpdatePlaylist with a userId is deprecated, remove the parameter")]
     public async Task<ErrorResponse> UpdatePlaylistAsync(string userId, string playlistId, string newName = null, bool? newPublic = null, bool? newCollaborative = null, string newDescription = null)
     {
-      JObject body = new JObject();
-      if (newName != null)
-        body.Add("name", newName);
-      if (newPublic != null)
-        body.Add("public", newPublic);
-      if (newCollaborative != null)
-        body.Add("collaborative", newCollaborative);
-      if (newDescription != null)
-        body.Add("description", newDescription);
-      return await UploadDataAsync<ErrorResponse>(_builder.UpdatePlaylist(userId, playlistId), body.ToString(Formatting.None), "PUT").ConfigureAwait(false) ?? new ErrorResponse();
+      string body = JsonSerializer.Serialize(new { name = newName, @public = newPublic, collaborative = newCollaborative, description = newDescription }, _ignoreNullOptions);
+      return await UploadDataAsync<ErrorResponse>(_builder.UpdatePlaylist(userId, playlistId), body, "PUT").ConfigureAwait(false) ?? new ErrorResponse();
     }
 
     /// <summary>
@@ -1617,16 +1580,8 @@ namespace SpotifyAPI.Web
     /// <remarks>AUTH NEEDED</remarks>
     public async Task<ErrorResponse> UpdatePlaylistAsync(string playlistId, string newName = null, bool? newPublic = null, bool? newCollaborative = null, string newDescription = null)
     {
-      JObject body = new JObject();
-      if (newName != null)
-        body.Add("name", newName);
-      if (newPublic != null)
-        body.Add("public", newPublic);
-      if (newCollaborative != null)
-        body.Add("collaborative", newCollaborative);
-      if (newDescription != null)
-        body.Add("description", newDescription);
-      return await UploadDataAsync<ErrorResponse>(_builder.UpdatePlaylist(playlistId), body.ToString(Formatting.None), "PUT").ConfigureAwait(false) ?? new ErrorResponse();
+      string body = JsonSerializer.Serialize(new { name = newName, @public = newPublic, collaborative = newCollaborative, description = newDescription }, _ignoreNullOptions);
+      return await UploadDataAsync<ErrorResponse>(_builder.UpdatePlaylist(playlistId), body, "PUT").ConfigureAwait(false) ?? new ErrorResponse();
     }
 
     /// <summary>
@@ -1692,10 +1647,8 @@ namespace SpotifyAPI.Web
     [Obsolete("Calling ReplacePlaylistTracks with a userId is deprecated, remove the parameter")]
     public ErrorResponse ReplacePlaylistTracks(string userId, string playlistId, List<string> uris)
     {
-      JObject body = new JObject
-      { { "uris", new JArray(uris.Take(100)) }
-      };
-      return UploadData<ErrorResponse>(_builder.ReplacePlaylistTracks(userId, playlistId), body.ToString(Formatting.None), "PUT") ?? new ErrorResponse();
+      var body = JsonSerializer.Serialize(new { uris = uris.Take(100) });
+      return UploadData<ErrorResponse>(_builder.ReplacePlaylistTracks(userId, playlistId), body, "PUT") ?? new ErrorResponse();
     }
 
     /// <summary>
@@ -1708,10 +1661,8 @@ namespace SpotifyAPI.Web
     /// <remarks>AUTH NEEDED</remarks>
     public ErrorResponse ReplacePlaylistTracks(string playlistId, List<string> uris)
     {
-      JObject body = new JObject
-      { { "uris", new JArray(uris.Take(100)) }
-      };
-      return UploadData<ErrorResponse>(_builder.ReplacePlaylistTracks(playlistId), body.ToString(Formatting.None), "PUT") ?? new ErrorResponse();
+      var body = JsonSerializer.Serialize(new { uris = uris.Take(100) });
+      return UploadData<ErrorResponse>(_builder.ReplacePlaylistTracks(playlistId), body, "PUT") ?? new ErrorResponse();
     }
 
     /// <summary>
@@ -1726,10 +1677,8 @@ namespace SpotifyAPI.Web
     [Obsolete("Calling ReplacePlaylistTracks with a userId is deprecated, remove the parameter")]
     public async Task<ErrorResponse> ReplacePlaylistTracksAsync(string userId, string playlistId, List<string> uris)
     {
-      JObject body = new JObject
-      { { "uris", new JArray(uris.Take(100)) }
-      };
-      return await UploadDataAsync<ErrorResponse>(_builder.ReplacePlaylistTracks(userId, playlistId), body.ToString(Formatting.None), "PUT").ConfigureAwait(false) ?? new ErrorResponse();
+      var body = JsonSerializer.Serialize(new { uris = uris.Take(100) });
+      return await UploadDataAsync<ErrorResponse>(_builder.ReplacePlaylistTracks(userId, playlistId), body, "PUT").ConfigureAwait(false) ?? new ErrorResponse();
     }
 
     /// <summary>
@@ -1742,10 +1691,8 @@ namespace SpotifyAPI.Web
     /// <remarks>AUTH NEEDED</remarks>
     public async Task<ErrorResponse> ReplacePlaylistTracksAsync(string playlistId, List<string> uris)
     {
-      JObject body = new JObject
-      { { "uris", new JArray(uris.Take(100)) }
-      };
-      return await UploadDataAsync<ErrorResponse>(_builder.ReplacePlaylistTracks(playlistId), body.ToString(Formatting.None), "PUT").ConfigureAwait(false) ?? new ErrorResponse();
+      var body = JsonSerializer.Serialize(new { uris = uris.Take(100) });
+      return await UploadDataAsync<ErrorResponse>(_builder.ReplacePlaylistTracks(playlistId), body, "PUT").ConfigureAwait(false) ?? new ErrorResponse();
     }
 
     /// <summary>
@@ -1762,10 +1709,8 @@ namespace SpotifyAPI.Web
     [Obsolete("Calling RemovePlaylistTracks with a userId is deprecated, remove the parameter")]
     public ErrorResponse RemovePlaylistTracks(string userId, string playlistId, List<DeleteTrackUri> uris)
     {
-      JObject body = new JObject
-      { { "tracks", JArray.FromObject(uris.Take(100)) }
-      };
-      return UploadData<ErrorResponse>(_builder.RemovePlaylistTracks(userId, playlistId, uris), body.ToString(Formatting.None), "DELETE") ?? new ErrorResponse();
+      var body = JsonSerializer.Serialize(new { tracks = uris.Take(100) });
+      return UploadData<ErrorResponse>(_builder.RemovePlaylistTracks(userId, playlistId, uris), body, "DELETE") ?? new ErrorResponse();
     }
 
     /// <summary>
@@ -1780,10 +1725,8 @@ namespace SpotifyAPI.Web
     /// <remarks>AUTH NEEDED</remarks>
     public ErrorResponse RemovePlaylistTracks(string playlistId, List<DeleteTrackUri> uris)
     {
-      JObject body = new JObject
-      { { "tracks", JArray.FromObject(uris.Take(100)) }
-      };
-      return UploadData<ErrorResponse>(_builder.RemovePlaylistTracks(playlistId, uris), body.ToString(Formatting.None), "DELETE") ?? new ErrorResponse();
+      var body = JsonSerializer.Serialize(new { tracks = uris.Take(100) });
+      return UploadData<ErrorResponse>(_builder.RemovePlaylistTracks(playlistId, uris), body, "DELETE") ?? new ErrorResponse();
     }
 
     /// <summary>
@@ -1800,10 +1743,8 @@ namespace SpotifyAPI.Web
     [Obsolete("Calling RemovePlaylistTracks with a userId is deprecated, remove the parameter")]
     public async Task<ErrorResponse> RemovePlaylistTracksAsync(string userId, string playlistId, List<DeleteTrackUri> uris)
     {
-      JObject body = new JObject
-      { { "tracks", JArray.FromObject(uris.Take(100)) }
-      };
-      return await UploadDataAsync<ErrorResponse>(_builder.RemovePlaylistTracks(userId, playlistId, uris), body.ToString(Formatting.None), "DELETE").ConfigureAwait(false) ?? new ErrorResponse();
+      var body = JsonSerializer.Serialize(new { tracks = uris.Take(100) });
+      return await UploadDataAsync<ErrorResponse>(_builder.RemovePlaylistTracks(userId, playlistId, uris), body, "DELETE").ConfigureAwait(false) ?? new ErrorResponse();
     }
 
     /// <summary>
@@ -1818,10 +1759,8 @@ namespace SpotifyAPI.Web
     /// <remarks>AUTH NEEDED</remarks>
     public async Task<ErrorResponse> RemovePlaylistTracksAsync(string playlistId, List<DeleteTrackUri> uris)
     {
-      JObject body = new JObject
-      { { "tracks", JArray.FromObject(uris.Take(100)) }
-      };
-      return await UploadDataAsync<ErrorResponse>(_builder.RemovePlaylistTracks(playlistId, uris), body.ToString(Formatting.None), "DELETE").ConfigureAwait(false) ?? new ErrorResponse();
+      var body = JsonSerializer.Serialize(new { tracks = uris.Take(100) });
+      return await UploadDataAsync<ErrorResponse>(_builder.RemovePlaylistTracks(playlistId, uris), body, "DELETE").ConfigureAwait(false) ?? new ErrorResponse();
     }
 
     /// <summary>
@@ -1888,10 +1827,8 @@ namespace SpotifyAPI.Web
     [Obsolete("Calling AddPlaylistTracks with a userId is deprecated, remove the parameter")]
     public ErrorResponse AddPlaylistTracks(string userId, string playlistId, List<string> uris, int? position = null)
     {
-      JObject body = new JObject
-      { { "uris", JArray.FromObject(uris.Take(100)) }
-      };
-      return UploadData<ErrorResponse>(_builder.AddPlaylistTracks(userId, playlistId, uris, position), body.ToString(Formatting.None)) ?? new ErrorResponse();
+      var body = JsonSerializer.Serialize(new { uris = uris.Take(100) });
+      return UploadData<ErrorResponse>(_builder.AddPlaylistTracks(userId, playlistId, uris, position), body) ?? new ErrorResponse();
     }
 
     /// <summary>
@@ -1904,10 +1841,8 @@ namespace SpotifyAPI.Web
     /// <remarks>AUTH NEEDED</remarks>
     public ErrorResponse AddPlaylistTracks(string playlistId, List<string> uris, int? position = null)
     {
-      JObject body = new JObject
-      { { "uris", JArray.FromObject(uris.Take(100)) }
-      };
-      return UploadData<ErrorResponse>(_builder.AddPlaylistTracks(playlistId, uris, position), body.ToString(Formatting.None)) ?? new ErrorResponse();
+      var body = JsonSerializer.Serialize(new { uris = uris.Take(100) });
+      return UploadData<ErrorResponse>(_builder.AddPlaylistTracks(playlistId, uris, position), body) ?? new ErrorResponse();
     }
 
     /// <summary>
@@ -1922,10 +1857,8 @@ namespace SpotifyAPI.Web
     [Obsolete("Calling AddPlaylistTracks with a userId is deprecated, remove the parameter")]
     public async Task<ErrorResponse> AddPlaylistTracksAsync(string userId, string playlistId, List<string> uris, int? position = null)
     {
-      JObject body = new JObject
-      { { "uris", JArray.FromObject(uris.Take(100)) }
-      };
-      return await UploadDataAsync<ErrorResponse>(_builder.AddPlaylistTracks(userId, playlistId, uris, position), body.ToString(Formatting.None)).ConfigureAwait(false) ?? new ErrorResponse();
+      var body = JsonSerializer.Serialize(new { uris = uris.Take(100) });
+      return await UploadDataAsync<ErrorResponse>(_builder.AddPlaylistTracks(userId, playlistId, uris, position), body).ConfigureAwait(false) ?? new ErrorResponse();
     }
 
     /// <summary>
@@ -1938,10 +1871,8 @@ namespace SpotifyAPI.Web
     /// <remarks>AUTH NEEDED</remarks>
     public async Task<ErrorResponse> AddPlaylistTracksAsync(string playlistId, List<string> uris, int? position = null)
     {
-      JObject body = new JObject
-      { { "uris", JArray.FromObject(uris.Take(100)) }
-      };
-      return await UploadDataAsync<ErrorResponse>(_builder.AddPlaylistTracks(playlistId, uris, position), body.ToString(Formatting.None)).ConfigureAwait(false) ?? new ErrorResponse();
+      var body = JsonSerializer.Serialize(new { uris = uris.Take(100) });
+      return await UploadDataAsync<ErrorResponse>(_builder.AddPlaylistTracks(playlistId, uris, position), body).ConfigureAwait(false) ?? new ErrorResponse();
     }
 
     /// <summary>
@@ -2014,12 +1945,8 @@ namespace SpotifyAPI.Web
     [Obsolete("Calling ReorderPlaylist with a userId is deprecated, remove the parameter")]
     public Snapshot ReorderPlaylist(string userId, string playlistId, int rangeStart, int insertBefore, int rangeLength = 1, string snapshotId = "")
     {
-      JObject body = new JObject
-      { { "range_start", rangeStart }, { "range_length", rangeLength }, { "insert_before", insertBefore }
-      };
-      if (!string.IsNullOrEmpty(snapshotId))
-        body.Add("snapshot_id", snapshotId);
-      return UploadData<Snapshot>(_builder.ReorderPlaylist(userId, playlistId), body.ToString(Formatting.None), "PUT");
+      string body = JsonSerializer.Serialize(new { range_start = rangeStart, range_length = rangeLength, insert_before = insertBefore, snapshot_id = string.IsNullOrEmpty(snapshotId) ? null : snapshotId }, _ignoreNullOptions);
+      return UploadData<Snapshot>(_builder.ReorderPlaylist(userId, playlistId), body, "PUT");
     }
 
     /// <summary>
@@ -2034,12 +1961,8 @@ namespace SpotifyAPI.Web
     /// <remarks>AUTH NEEDED</remarks>
     public Snapshot ReorderPlaylist(string playlistId, int rangeStart, int insertBefore, int rangeLength = 1, string snapshotId = "")
     {
-      JObject body = new JObject
-      { { "range_start", rangeStart }, { "range_length", rangeLength }, { "insert_before", insertBefore }
-      };
-      if (!string.IsNullOrEmpty(snapshotId))
-        body.Add("snapshot_id", snapshotId);
-      return UploadData<Snapshot>(_builder.ReorderPlaylist(playlistId), body.ToString(Formatting.None), "PUT");
+      string body = JsonSerializer.Serialize(new { range_start = rangeStart, range_length = rangeLength, insert_before = insertBefore, snapshot_id = string.IsNullOrEmpty(snapshotId) ? null : snapshotId }, _ignoreNullOptions);
+      return UploadData<Snapshot>(_builder.ReorderPlaylist(playlistId), body, "PUT");
     }
 
     /// <summary>
@@ -2056,12 +1979,8 @@ namespace SpotifyAPI.Web
     [Obsolete("Calling ReorderPlaylist with a userId is deprecated, remove the parameter")]
     public Task<Snapshot> ReorderPlaylistAsync(string userId, string playlistId, int rangeStart, int insertBefore, int rangeLength = 1, string snapshotId = "")
     {
-      JObject body = new JObject
-      { { "range_start", rangeStart }, { "range_length", rangeLength }, { "insert_before", insertBefore }, { "snapshot_id", snapshotId }
-      };
-      if (!string.IsNullOrEmpty(snapshotId))
-        body.Add("snapshot_id", snapshotId);
-      return UploadDataAsync<Snapshot>(_builder.ReorderPlaylist(userId, playlistId), body.ToString(Formatting.None), "PUT");
+      string body = JsonSerializer.Serialize(new { range_start = rangeStart, range_length = rangeLength, insert_before = insertBefore, snapshot_id = string.IsNullOrEmpty(snapshotId) ? null : snapshotId }, _ignoreNullOptions);
+      return UploadDataAsync<Snapshot>(_builder.ReorderPlaylist(userId, playlistId), body, "PUT");
     }
 
     /// <summary>
@@ -2076,12 +1995,8 @@ namespace SpotifyAPI.Web
     /// <remarks>AUTH NEEDED</remarks>
     public Task<Snapshot> ReorderPlaylistAsync(string playlistId, int rangeStart, int insertBefore, int rangeLength = 1, string snapshotId = "")
     {
-      JObject body = new JObject
-      { { "range_start", rangeStart }, { "range_length", rangeLength }, { "insert_before", insertBefore }, { "snapshot_id", snapshotId }
-      };
-      if (!string.IsNullOrEmpty(snapshotId))
-        body.Add("snapshot_id", snapshotId);
-      return UploadDataAsync<Snapshot>(_builder.ReorderPlaylist(playlistId), body.ToString(Formatting.None), "PUT");
+      string body = JsonSerializer.Serialize(new { range_start = rangeStart, range_length = rangeLength, insert_before = insertBefore, snapshot_id = string.IsNullOrEmpty(snapshotId) ? null : snapshotId }, _ignoreNullOptions);
+      return UploadDataAsync<Snapshot>(_builder.ReorderPlaylist(playlistId), body, "PUT");
     }
 
     #endregion Playlists
@@ -2344,10 +2259,8 @@ namespace SpotifyAPI.Web
     /// <returns></returns>
     public ErrorResponse TransferPlayback(List<string> deviceIds, bool play = false)
     {
-      JObject ob = new JObject
-      { { "play", play }, { "device_ids", new JArray(deviceIds) }
-      };
-      return UploadData<ErrorResponse>(_builder.TransferPlayback(), ob.ToString(Formatting.None), "PUT");
+      string data = JsonSerializer.Serialize(new { play = play, device_ids = deviceIds });
+      return UploadData<ErrorResponse>(_builder.TransferPlayback(), data, "PUT");
     }
 
     /// <summary>
@@ -2362,10 +2275,9 @@ namespace SpotifyAPI.Web
     /// <returns></returns>
     public Task<ErrorResponse> TransferPlaybackAsync(List<string> deviceIds, bool play = false)
     {
-      JObject ob = new JObject
-      { { "play", play }, { "device_ids", new JArray(deviceIds) }
-      };
-      return UploadDataAsync<ErrorResponse>(_builder.TransferPlayback(), ob.ToString(Formatting.None), "PUT");
+      ;
+      string data = JsonSerializer.Serialize(new { play = play, device_ids = deviceIds });
+      return UploadDataAsync<ErrorResponse>(_builder.TransferPlayback(), data, "PUT");
     }
 
     /// <summary>
@@ -2381,16 +2293,8 @@ namespace SpotifyAPI.Web
     public ErrorResponse ResumePlayback(string deviceId = "", string contextUri = "", List<string> uris = null,
       int? offset = null, int positionMs = 0)
     {
-      JObject ob = new JObject();
-      if (!string.IsNullOrEmpty(contextUri))
-        ob.Add("context_uri", contextUri);
-      if (uris != null)
-        ob.Add("uris", new JArray(uris));
-      if (offset != null)
-        ob.Add("offset", new JObject { { "position", offset } });
-      if (positionMs > 0)
-        ob.Add("position_ms", positionMs);
-      return UploadData<ErrorResponse>(_builder.ResumePlayback(deviceId), ob.ToString(Formatting.None), "PUT");
+      string data = JsonSerializer.Serialize(new { context_uri = string.IsNullOrEmpty(contextUri) ? null : contextUri, uris = uris, offset = new { position = offset }, position_ms = (positionMs > 0 ? (int?)positionMs : null) }, _ignoreNullOptions);
+      return UploadData<ErrorResponse>(_builder.ResumePlayback(deviceId), data, "PUT");
     }
 
     /// <summary>
@@ -2406,16 +2310,8 @@ namespace SpotifyAPI.Web
     public Task<ErrorResponse> ResumePlaybackAsync(string deviceId = "", string contextUri = "", List<string> uris = null,
       int? offset = null, int positionMs = 0)
     {
-      JObject ob = new JObject();
-      if (!string.IsNullOrEmpty(contextUri))
-        ob.Add("context_uri", contextUri);
-      if (uris != null)
-        ob.Add("uris", new JArray(uris));
-      if (offset != null)
-        ob.Add("offset", new JObject { { "position", offset } });
-      if (positionMs > 0)
-        ob.Add("position_ms", positionMs);
-      return UploadDataAsync<ErrorResponse>(_builder.ResumePlayback(deviceId), ob.ToString(Formatting.None), "PUT");
+      string data = JsonSerializer.Serialize(new { context_uri = string.IsNullOrEmpty(contextUri) ? null : contextUri, uris = uris, offset = new { position = offset }, position_ms = (positionMs > 0 ? (int?)positionMs : null) }, _ignoreNullOptions);
+      return UploadDataAsync<ErrorResponse>(_builder.ResumePlayback(deviceId), data, "PUT");
     }
 
     /// <summary>
@@ -2431,16 +2327,8 @@ namespace SpotifyAPI.Web
     public ErrorResponse ResumePlayback(string deviceId = "", string contextUri = "", List<string> uris = null,
       string offset = "", int positionMs = 0)
     {
-      JObject ob = new JObject();
-      if (!string.IsNullOrEmpty(contextUri))
-        ob.Add("context_uri", contextUri);
-      if (uris != null)
-        ob.Add("uris", new JArray(uris));
-      if (!string.IsNullOrEmpty(offset))
-        ob.Add("offset", new JObject { { "uri", offset } });
-      if (positionMs > 0)
-        ob.Add("position_ms", positionMs);
-      return UploadData<ErrorResponse>(_builder.ResumePlayback(deviceId), ob.ToString(Formatting.None), "PUT");
+      string data = JsonSerializer.Serialize(new { context_uri = string.IsNullOrEmpty(contextUri) ? null : contextUri, uris = uris, offset = new { position = offset }, position_ms = (positionMs > 0 ? (int?)positionMs : null) }, _ignoreNullOptions);
+      return UploadData<ErrorResponse>(_builder.ResumePlayback(deviceId), data, "PUT");
     }
 
     /// <summary>
@@ -2456,16 +2344,8 @@ namespace SpotifyAPI.Web
     public Task<ErrorResponse> ResumePlaybackAsync(string deviceId = "", string contextUri = "", List<string> uris = null,
       string offset = "", int positionMs = 0)
     {
-      JObject ob = new JObject();
-      if (!string.IsNullOrEmpty(contextUri))
-        ob.Add("context_uri", contextUri);
-      if (uris != null)
-        ob.Add("uris", new JArray(uris));
-      if (!string.IsNullOrEmpty(offset))
-        ob.Add("offset", new JObject { { "uri", offset } });
-      if (positionMs > 0)
-        ob.Add("position_ms", positionMs);
-      return UploadDataAsync<ErrorResponse>(_builder.ResumePlayback(deviceId), ob.ToString(Formatting.None), "PUT");
+      string data = JsonSerializer.Serialize(new { context_uri = string.IsNullOrEmpty(contextUri) ? null : contextUri, uris = uris, offset = new { position = offset }, position_ms = (positionMs > 0 ? (int?)positionMs : null) }, _ignoreNullOptions);
+      return UploadDataAsync<ErrorResponse>(_builder.ResumePlayback(deviceId), data, "PUT");
     }
 
     /// <summary>
@@ -2729,7 +2609,7 @@ namespace SpotifyAPI.Web
       do
       {
         if (data != null) { Thread.Sleep(RetryAfter); }
-        Tuple<ResponseInfo, JToken> res = DownloadDataAlt<JToken>(url);
+        Tuple<ResponseInfo, JsonElement> res = DownloadDataAlt<JsonElement>(url);
         data = ExtractDataToListResponse<T>(res);
 
         lastError = data.Error;
@@ -2750,7 +2630,7 @@ namespace SpotifyAPI.Web
       do
       {
         if (data != null) { await Task.Delay(RetryAfter).ConfigureAwait(false); }
-        Tuple<ResponseInfo, JToken> res = await DownloadDataAltAsync<JToken>(url).ConfigureAwait(false);
+        Tuple<ResponseInfo, JsonElement> res = await DownloadDataAltAsync<JsonElement>(url).ConfigureAwait(false);
         data = ExtractDataToListResponse<T>(res);
 
         lastError = data.Error;
@@ -2762,14 +2642,16 @@ namespace SpotifyAPI.Web
       return data;
     }
 
-    private static ListResponse<T> ExtractDataToListResponse<T>(Tuple<ResponseInfo, JToken> res)
+    private static ListResponse<T> ExtractDataToListResponse<T>(Tuple<ResponseInfo, JsonElement> res)
     {
       ListResponse<T> ret;
-      if (res.Item2 is JArray)
+      if (res.Item2.ValueKind == JsonValueKind.Array)
       {
+        Console.WriteLine("Doing bad list serialize-deserialize");
         ret = new ListResponse<T>
         {
-          List = res.Item2.ToObject<List<T>>(),
+          // List = res.Item2.ToObject<List<T>>(),
+          List = JsonSerializer.Deserialize<List<T>>(JsonSerializer.Serialize(res.Item2)),
           Error = null
         };
       }
@@ -2778,7 +2660,7 @@ namespace SpotifyAPI.Web
         ret = new ListResponse<T>
         {
           List = null,
-          Error = res.Item2["error"].ToObject<Error>()
+          Error = JsonSerializer.Deserialize<Error>(JsonSerializer.Serialize(res.Item2.GetProperty("error")))
         };
       }
       ret.AddResponseInfo(res.Item1);
