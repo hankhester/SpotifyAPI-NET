@@ -13,7 +13,7 @@ namespace SpotifyAPI.Web
 {
   internal class SpotifyWebClient : IClient
   {
-    public JsonSerializerSettings JsonSettings { get; set; }
+    public JsonSerializerOptions JsonSettings { get; set; }
     private readonly Encoding _encoding = Encoding.UTF8;
     private readonly HttpClient _client;
 
@@ -74,11 +74,11 @@ namespace SpotifyAPI.Web
       Tuple<ResponseInfo, string> response = Download(url, headers);
       try
       {
-        return new Tuple<ResponseInfo, T>(response.Item1, JsonConvert.DeserializeObject<T>(response.Item2, JsonSettings));
+        return new Tuple<ResponseInfo, T>(response.Item1, JsonSerializer.Deserialize<T>(response.Item2, JsonSettings));
       }
       catch (JsonException error)
       {
-        return new Tuple<ResponseInfo, T>(response.Item1, JsonConvert.DeserializeObject<T>(string.Format(UnknownErrorJson, error.Message), JsonSettings));
+        return new Tuple<ResponseInfo, T>(response.Item1, JsonSerializer.Deserialize<T>(string.Format(UnknownErrorJson, error.Message), JsonSettings));
       }
     }
 
@@ -87,11 +87,11 @@ namespace SpotifyAPI.Web
       Tuple<ResponseInfo, string> response = await DownloadAsync(url, headers).ConfigureAwait(false);
       try
       {
-        return new Tuple<ResponseInfo, T>(response.Item1, JsonConvert.DeserializeObject<T>(response.Item2, JsonSettings));
+        return new Tuple<ResponseInfo, T>(response.Item1, JsonSerializer.Deserialize<T>(response.Item2, JsonSettings));
       }
       catch (JsonException error)
       {
-        return new Tuple<ResponseInfo, T>(response.Item1, JsonConvert.DeserializeObject<T>(string.Format(UnknownErrorJson, error.Message), JsonSettings));
+        return new Tuple<ResponseInfo, T>(response.Item1, JsonSerializer.Deserialize<T>(string.Format(UnknownErrorJson, error.Message), JsonSettings));
       }
     }
 
@@ -154,11 +154,11 @@ namespace SpotifyAPI.Web
       Tuple<ResponseInfo, string> response = Upload(url, body, method, headers);
       try
       {
-        return new Tuple<ResponseInfo, T>(response.Item1, JsonConvert.DeserializeObject<T>(response.Item2, JsonSettings));
+        return new Tuple<ResponseInfo, T>(response.Item1, JsonSerializer.Deserialize<T>(response.Item2, JsonSettings));
       }
       catch (JsonException error)
       {
-        return new Tuple<ResponseInfo, T>(response.Item1, JsonConvert.DeserializeObject<T>(string.Format(UnknownErrorJson, error.Message), JsonSettings));
+        return new Tuple<ResponseInfo, T>(response.Item1, JsonSerializer.Deserialize<T>(string.Format(UnknownErrorJson, error.Message), JsonSettings));
       }
     }
 
@@ -167,11 +167,11 @@ namespace SpotifyAPI.Web
       Tuple<ResponseInfo, string> response = await UploadAsync(url, body, method, headers).ConfigureAwait(false);
       try
       {
-        return new Tuple<ResponseInfo, T>(response.Item1, JsonConvert.DeserializeObject<T>(response.Item2, JsonSettings));
+        return new Tuple<ResponseInfo, T>(response.Item1, JsonSerializer.Deserialize<T>(response.Item2, JsonSettings));
       }
       catch (JsonException error)
       {
-        return new Tuple<ResponseInfo, T>(response.Item1, JsonConvert.DeserializeObject<T>(string.Format(UnknownErrorJson, error.Message), JsonSettings));
+        return new Tuple<ResponseInfo, T>(response.Item1, JsonSerializer.Deserialize<T>(string.Format(UnknownErrorJson, error.Message), JsonSettings));
       }
     }
 
