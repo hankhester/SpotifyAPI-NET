@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
+// TODO: go through spotify docs and add nullable types
 namespace SpotifyAPI.Web.Models
 {
   public class Image
@@ -12,10 +13,10 @@ namespace SpotifyAPI.Web.Models
     public string Url { get; set; }
 
     [JsonPropertyName("width")]
-    public int Width { get; set; }
+    public int? Width { get; set; }
 
     [JsonPropertyName("height")]
-    public int Height { get; set; }
+    public int? Height { get; set; }
   }
 
   public class ErrorResponse : BasicModel

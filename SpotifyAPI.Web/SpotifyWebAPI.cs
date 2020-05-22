@@ -2650,7 +2650,6 @@ namespace SpotifyAPI.Web
         Console.WriteLine("Doing bad list serialize-deserialize");
         ret = new ListResponse<T>
         {
-          // List = res.Item2.ToObject<List<T>>(),
           List = JsonSerializer.Deserialize<List<T>>(JsonSerializer.Serialize(res.Item2)),
           Error = null
         };
@@ -2736,6 +2735,7 @@ namespace SpotifyAPI.Web
 
         response.Item2.AddResponseInfo(response.Item1);
         lastError = response.Item2.Error;
+        Console.WriteLine(lastError);
 
         triesLeft -= 1;
 

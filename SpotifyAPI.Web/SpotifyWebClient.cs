@@ -17,7 +17,7 @@ namespace SpotifyAPI.Web
     private readonly Encoding _encoding = Encoding.UTF8;
     private readonly HttpClient _client;
 
-    private const string UnknownErrorJson = "{\"error\": { \"status\": 0, \"message\": \"{0}\" }}";
+    private const string UnknownErrorJson = "{{\"error\": {{ \"status\": 0, \"message\": \"{0}\" }}}}";
 
     public SpotifyWebClient()
     {
@@ -91,6 +91,8 @@ namespace SpotifyAPI.Web
       }
       catch (JsonException error)
       {
+        Console.WriteLine("exception:");
+        Console.WriteLine(error.ToString().Substring(0, 200));
         return new Tuple<ResponseInfo, T>(response.Item1, JsonSerializer.Deserialize<T>(string.Format(UnknownErrorJson, error.Message), JsonSettings));
       }
     }
