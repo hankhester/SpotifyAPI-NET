@@ -15,8 +15,6 @@ namespace SpotifyAPI.Web.Auth
 
     public string ClientId { get; set; }
 
-    public ProxyConfig ProxyConfig { get; set; }
-
     public CredentialsAuth(string clientId, string clientSecret)
     {
       ClientId = clientId;
@@ -31,7 +29,7 @@ namespace SpotifyAPI.Web.Auth
       {new KeyValuePair<string, string>("grant_type", "client_credentials")
       };
 
-      HttpClientHandler handler = ProxyConfig.CreateClientHandler(ProxyConfig);
+      HttpClientHandler handler = new HttpClientHandler();
       HttpClient client = new HttpClient(handler);
       client.DefaultRequestHeaders.Add("Authorization", $"Basic {auth}");
       HttpContent content = new FormUrlEncodedContent(args);
@@ -39,7 +37,7 @@ namespace SpotifyAPI.Web.Auth
       HttpResponseMessage resp = await client.PostAsync("https://accounts.spotify.com/api/token", content);
       string msg = await resp.Content.ReadAsStringAsync();
 
-      return JsonConvert.DeserializeObject<Token>(msg);
+      return JsonSerializer.Deserialize<Token>(msg);
     }
   }
 }

@@ -17,8 +17,6 @@ namespace SpotifyAPI.Web.Auth
   {
     public string SecretId { get; set; }
 
-    public ProxyConfig ProxyConfig { get; set; }
-
     public AuthorizationCodeAuth(string redirectUri, string serverUri, Scope scope = Scope.None, string state = "") : base("code", "AuthorizationCodeAuth", redirectUri, serverUri, scope, state)
     { }
 
@@ -70,7 +68,7 @@ namespace SpotifyAPI.Web.Auth
 
     private async Task<Token> GetToken(IEnumerable<KeyValuePair<string, string>> args)
     {
-      HttpClientHandler handler = ProxyConfig.CreateClientHandler(ProxyConfig);
+      HttpClientHandler handler = new HttpClientHandler();
       HttpClient client = new HttpClient(handler);
       client.DefaultRequestHeaders.Add("Authorization", GetAuthHeader());
       HttpContent content = new FormUrlEncodedContent(args);
@@ -78,7 +76,7 @@ namespace SpotifyAPI.Web.Auth
       HttpResponseMessage resp = await client.PostAsync("https://accounts.spotify.com/api/token", content);
       string msg = await resp.Content.ReadAsStringAsync();
 
-      return JsonConvert.DeserializeObject<Token>(msg);
+      return JsonSerializer.Deserialize<Token>(msg);
     }
   }
 
@@ -124,7 +122,9 @@ namespace SpotifyAPI.Web.Auth
       auth.SecretId = (string) formParams["secretId"];
 
       string uri = auth.GetUri();
+      #pragma warning disable CS0618
       return HttpContext.Redirect(uri, false);
+      #pragma warning restore CS0618
     }
 
     public AuthorizationCodeAuthController(IHttpContext context) : base(context)

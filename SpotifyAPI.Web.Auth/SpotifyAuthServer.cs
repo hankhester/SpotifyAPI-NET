@@ -47,7 +47,9 @@ namespace SpotifyAPI.Web.Auth
       _server = WebServer.Create(ServerUri);
       _server.RegisterModule(new WebApiModule());
       AdaptWebServer(_server);
+      #pragma warning disable CS0618
       _server.RegisterModule(new ResourceFilesModule(Assembly.GetExecutingAssembly(), $"SpotifyAPI.Web.Auth.Resources.{_folder}"));
+      #pragma warning restore CS0618
 #pragma warning disable 4014
       _server.RunAsync(_serverSource.Token);
 #pragma warning restore 4014

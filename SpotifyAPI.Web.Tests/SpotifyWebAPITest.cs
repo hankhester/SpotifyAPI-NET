@@ -31,7 +31,7 @@ namespace SpotifyAPI.Web.Tests
 
     private static T GetFixture<T>(string file)
     {
-      return JsonConvert.DeserializeObject<T>(File.ReadAllText(Path.Combine(FixtureDir, file)));
+      return JsonSerializer.Deserialize<T>(File.ReadAllText(Path.Combine(FixtureDir, file)));
     }
 
     private static bool ContainsValues(string str, params string[] values)

@@ -28,8 +28,10 @@ namespace SpotifyAPI.Web.Auth
       string state = Request.QueryString["state"];
       SpotifyAuthServer<Token> auth = ImplicitGrantAuth.GetByState(state);
       if (auth == null)
+        #pragma warning disable CS0618
         return HttpContext.StringResponseAsync(
           $"Failed - Unable to find auth request with state \"{state}\" - Please retry");
+        #pragma warning restore CS0618
 
       Token token;
       string error = Request.QueryString["error"];

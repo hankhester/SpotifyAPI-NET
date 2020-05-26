@@ -35,8 +35,6 @@ namespace SpotifyAPI.Web.Auth
     /// </summary>
     public bool TimeAccessExpiry { get; set; }
 
-    public ProxyConfig ProxyConfig { get; set; }
-
     /// <param name="exchangeServerUri">The URI to an exchange server that will perform the key exchange.</param>
     /// <param name="serverUri">The URI to host the server at that your exchange server should return the authorization code to by GET request. (e.g. http://localhost:4002)</param>
     /// <param name="scope"></param>
@@ -99,11 +97,11 @@ namespace SpotifyAPI.Web.Auth
 
       try
       {
-        HttpClientHandler handler = ProxyConfig.CreateClientHandler(ProxyConfig);
+        HttpClientHandler handler = new HttpClientHandler();
         HttpClient client = new HttpClient(handler);
         HttpResponseMessage siteResponse = await client.PostAsync(_exchangeServerUri, content);
 
-        Token token = JsonConvert.DeserializeObject<Token>(await siteResponse.Content.ReadAsStringAsync());
+        Token token = JsonSerializer.Deserialize<Token>(await siteResponse.Content.ReadAsStringAsync());
         // Don't need to check if it was null - if it is, it will resort to the catch block.
         if (!token.HasError() && !string.IsNullOrEmpty(token.AccessToken))
         {
